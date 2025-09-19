@@ -1,6 +1,6 @@
 a = 'QWERTYUIOPASDFGHJKLZXCVBNM'
 b = '012345689'
-ch = 'thisisabracadabraHt1eadljjl12ojh'
+ch = 'thisisabracadabraHt1eadljjl12ojh.'
 word = ''
 moves = []
 for i in range(len(ch)):
