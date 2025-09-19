@@ -1,7 +1,7 @@
 <!-- Задание 1 -->
-![alt text](./images\image-0.png)
+![alt text](C:\Users\hoang\OneDrive\Desktop\laba\python_labs\images\image-0.png)
 <!-- Задание 2 -->
-![alt text](./images\image-1.png)
+![alt text](C:\Users\hoang\OneDrive\Desktop\laba\python_labs\images\image-1.png)
 <!-- Задание 3 -->
 ![alt text](./images\image-2.png)
 <!-- Задание 4 -->
