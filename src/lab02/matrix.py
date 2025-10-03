@@ -1,7 +1,7 @@
 def transpose(mat: list[list[float | int]]) -> list[list]:
     if len(mat)==0:
         return []
-    num_cols = len(mat[0]) #длина столбиков
+    num_cols = len(mat[0]) #длина столбиков 
     if any(len(row) != num_cols for row in mat):
         return ('ValueError')
     return [[mat[i][j] for i in range(len(mat))] for j in range(num_cols)]
