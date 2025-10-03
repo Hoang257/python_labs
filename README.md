@@ -37,9 +37,45 @@ print(min_max([1.5, 2, 2.0, -3.1]))
 ![Результат задания 1.1](/images/image-8.png)
 
 ##  Задание 1.2
-![Код задания 1.2](/images/image-9.png)
+```def unique_sorted(nums: List[float|int]) -> List[float|int]:
+    return sorted(set(nums)) #возвразем отсортированный список
+print("\nТест unique_sorted:")
+print(unique_sorted([3, 1, 2, 1, 3]))
+print(unique_sorted([]))
+print(unique_sorted([-1, -1, 0, 2, 2]))
+print(unique_sorted([1.0, 1, 2.5, 2.5, 0]))
 ![Результат задания 1.2](/images/image-10.png)
-
+```
 ##  Задание 1.3
-![Код задания 1.3](/images/image-11.png)
+```def flatten(mat: List[List|Tuple]) -> List:
+    result = [] 
+    for element in mat:
+        if not isinstance(element, (list, tuple)): #проверка на тип даных
+            return ('TypeError')
+        result.extend(element)
+    return result
+
+print("\nТест flatten:")
+print(flatten([[1, 2], [3, 4]]))
+print(flatten([[1, 2], (3, 4, 5)]))
+print(flatten([[1, 2], (3, 4, 5)]))
+print(flatten([[1, 2], "ab"]))
+```
 ![Результат задания 1.3](/images/image-12.png)
+
+##  Задание 2.1
+```def transpose(mat: list[list[float | int]]) -> list[list]:
+    if len(mat)==0:
+        return []
+    num_cols = len(mat[0]) #длина столбиков
+    if any(len(row) != num_cols for row in mat):
+        return ('ValueError')
+    return [[mat[i][j] for i in range(len(mat))] for j in range(num_cols)]
+print('\nТест transpose:')
+print(transpose([[1, 2, 3]]))
+print(transpose([[1], [2], [3]]))
+print(transpose([[1, 2], [3, 4]]))
+print(transpose([]))
+print(transpose([[1, 2], [3]]))
+```
+![Результат задания 2.1](/images/image-12.png)
