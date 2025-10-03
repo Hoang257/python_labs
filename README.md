@@ -23,6 +23,6 @@
 
 # Лабораторная работа №2
 
-![Результат задания 1.1](/images/image-7.png)
-(/images/image-8.png)
+![Код задания 1.1](/images/image-7.png)
+[Результат задания 1.1](/images/image-8.png)
 
