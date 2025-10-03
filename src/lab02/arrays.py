@@ -10,7 +10,7 @@ print(min_max([]))
 print(min_max([1.5, 2, 2.0, -3.1]))
 
 def unique_sorted(nums: List[float|int]) -> List[float|int]:
-    return sorted(set(nums)) #возвразем отсортированный список
+    return sorted(set(nums)) #возвращаем отсортированный список
 print("\nТест unique_sorted:")
 print(unique_sorted([3, 1, 2, 1, 3]))
 print(unique_sorted([]))
