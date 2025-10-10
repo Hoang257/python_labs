@@ -207,6 +207,8 @@ print(col_sums([[1, 2], [3]]))
 # gpa_input = float(input('GPA: ').strip())
 # student_data = (name_input, group_input, gpa_input)
 def format_record(rec: tuple([str, str, float])) -> str: 
+    if not isinstance(rec[2], float):
+        return TypeError
     name, group, gpa = rec
     name_set = ' '.join(name.strip().split()).title()
     parts_name = name_set.split()
