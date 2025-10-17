@@ -241,3 +241,150 @@ if __name__ == "__main__":
         print(format_record(test))
 ```
 ![Результат задания 3](/images/image-16.png)
+
+# Лабораторная работа №3
+
+## Задание 1.1
+```python
+import re
+def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
+    if not text:
+        return []
+    if casefold == True:
+        text = text.casefold()
+    if yo2e == True:
+        text = text.replace('ё', 'е').replace('Ё', 'Е')
+    text = re.sub("[^a-zа-яё0-9\s]","", text) # Удаление всех символов, кроме букв, цифр и пробелов
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
+if __name__ == "__main__":
+    test_cases = [
+        "ПрИвЕт\nМИр\t",
+        "ёжик, Ёлка" ,
+        "Hello\r\nWorld",
+        "  двойные   пробелы  "
+
+    ]
+    print('\nТест normalize:')
+    for test in test_cases:
+        print(f"{normalize(test, casefold= True, yo2e = True)}")
+```
+![Результат задания 1](/images/image-17.png)
+
+## Задание 1.2
+```python
+def tokenize(text:str) -> list[str]:
+    if not text:
+        return []
+    
+    word = r'\b\w+(?:-\w+)*\b' # через регулярку задаем каким должен быть слово
+    tokens = re.findall(word, text)
+    return tokens
+
+if __name__ == '__main__':
+    test_cases = [
+        "привет мир",
+        "hello,world!!!",
+        "по-настоящему круто",
+        "2025 год",
+        "emoji 😀 не слово"
+    ]
+    print("\nТест на tokenize")
+    for test in test_cases:
+
+        print(f"{tokenize(test)}")
+```
+![Результат задания 1.2](/images/image-18.png)
+
+## Задание 1.3
+```python
+def count_freq(tokens: list[str]) -> dict[str, int]:
+    dictionary = {}
+    for token in tokens:
+        dictionary[token] = dictionary.get(token, 0) + 1
+    return dictionary
+
+if __name__ == '__main__':
+    test_cases = [
+        "a","b","a","c","b","a"
+        ]
+    print("\nТест на count_freq")
+    print(count_freq(test_cases))
+```
+![Результат задания 1.3](/images/image-19.png)
+
+## Задание 1.4
+```python
+def top_n(freq: dict[str, int], n: int = None) -> list[str, int]:
+    items = sorted(freq.items(), key= lambda x: (-x[1], x[0]))
+    return items[:n]
+
+if __name__ == '__main__':
+    test_cases = [
+        'aa bb b b d b b d a a'
+        ]
+    print('\nТест на top_words:')
+    for test in test_cases:
+        normalized = normalize(test)
+        tokens = tokenize(normalized)
+        freq = count_freq(tokens)
+        top_words = top_n(freq,3)
+    print(top_words)
+```
+![Результат задания 1.4](/images/image-20.png)
+
+## Задание 2 
+
+```python 
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from src.text import normalize, tokenize, count_freq, top_n
+
+TABLE_MODE = True
+def print_table(top_items):
+    
+    max_len_word = max(len(word) for word, _ in top_items)
+    col_1 = "слово"
+    col_2 = "частота"
+    width = max(max_len_word, len(col_1))
+
+    print('слово' + ' '* ((width+4)-len(col_1)) + "| частота" )
+
+
+    print("-"*(width+4)*2)
+    for word, count in top_items:
+
+        print(f"{word}" + ' ' * ((width+4)-len(word)) + f'| {count}')
+
+def main():
+    text = sys.stdin.readline().strip()
+    normalized = normalize(text)
+    tokens = tokenize(normalized)
+    freq = count_freq(tokens)
+
+    total_words = len(tokens)
+    unique_words = len(set(tokens))
+    top_5 = top_n(freq,5)
+    all_words = count_freq(tokens)
+
+    if TABLE_MODE:
+        print_table(top_5)
+    else:
+        print(f"Всего слов: {total_words}")
+        print(f"Уникальных слов: {unique_words}")
+        print("Топ-5:")
+        for word, count in top_5:
+            print(f"{word}:{count}")
+        
+
+if __name__ == "__main__":
+
+    print(f"Табличный режим: {'ВКЛ' if TABLE_MODE else 'ВЫКЛ'}")
+    main()
+```
+## Если включен режим показаа таблицы:
+![Результат задания 1.4](/images/image-21.png)
+## Если выключен режим показаа таблицы:
+![Результат задания 1.4](/images/image-22.png)
+
