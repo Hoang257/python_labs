@@ -274,7 +274,6 @@ if __name__ == "__main__":
 def tokenize(text:str) -> list[str]:
     if not text:
         return []
-    
     word = r'\b\w+(?:-\w+)*\b' # через регулярку задаем каким должен быть слово
     tokens = re.findall(word, text)
     return tokens
@@ -289,7 +288,6 @@ if __name__ == '__main__':
     ]
     print("\nТест на tokenize")
     for test in test_cases:
-
         print(f"{tokenize(test)}")
 ```
 ![Результат задания 1.2](/images/image-18.png)
@@ -337,20 +335,17 @@ if __name__ == '__main__':
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from src.text import normalize, tokenize, count_freq, top_n
-
 TABLE_MODE = True
 def print_table(top_items):
-    
     max_len_word = max(len(word) for word, _ in top_items)
     col_1 = "слово"
     col_2 = "частота"
     width = max(max_len_word, len(col_1))
 
     print('слово' + ' '* ((width+4)-len(col_1)) + "| частота" )
-
     print("-"*(width+4)*2)
-    for word, count in top_items:
 
+    for word, count in top_items:
         print(f"{word}" + ' ' * ((width+4)-len(word)) + f'| {count}')
 
 def main():
