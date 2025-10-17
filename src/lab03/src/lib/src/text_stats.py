@@ -2,7 +2,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from src.text import normalize, tokenize, count_freq, top_n
 
-TABLE_MODE = True
+TABLE_MODE = False
 def print_table(top_items):
     
     max_len_word = max(len(word) for word, _ in top_items)
@@ -29,19 +29,17 @@ def main():
     top_5 = top_n(freq,5)
     all_words = count_freq(tokens)
 
-    # print(f"Всего слов: {total_words}")
-    # print(f"Уникальных слов: {unique_words}")
-    # print("Топ-5:")
-    # for word, count in top_5:
-    #     print(f"{word}:{count}")
-    
     if TABLE_MODE:
         print_table(top_5)
     else:
+        print(f"Всего слов: {total_words}")
+        print(f"Уникальных слов: {unique_words}")
+        print("Топ-5:")
         for word, count in top_5:
-            print(f"{word}: {count}")
-
+            print(f"{word}:{count}")
+        
 
 if __name__ == "__main__":
+
     print(f"Табличный режим: {'ВКЛ' if TABLE_MODE else 'ВЫКЛ'}")
     main()
