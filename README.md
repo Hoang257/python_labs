@@ -224,7 +224,6 @@ def format_record(rec: tuple([str, str, float])) -> str:
     group_set= group
     gpa_set = f'{gpa:.2f}'
     return f'{name_end}, гр. {group_set}, GPA {gpa_set}'
-
 # result = format_record(student_data)
 # print(result)
 
@@ -236,7 +235,6 @@ if __name__ == "__main__":
         ("Петров Пётр Петрович", "IKBO-12"),
         ("  сидорова  анна   сергеевна ", "ABB-01", 3.999),
     ]
-    
     for test in test_cases:
         print(format_record(test))
 ```
@@ -264,7 +262,6 @@ if __name__ == "__main__":
         "ёжик, Ёлка" ,
         "Hello\r\nWorld",
         "  двойные   пробелы  "
-
     ]
     print('\nТест normalize:')
     for test in test_cases:
@@ -351,7 +348,6 @@ def print_table(top_items):
 
     print('слово' + ' '* ((width+4)-len(col_1)) + "| частота" )
 
-
     print("-"*(width+4)*2)
     for word, count in top_items:
 
@@ -376,10 +372,7 @@ def main():
         print("Топ-5:")
         for word, count in top_5:
             print(f"{word}:{count}")
-        
-
 if __name__ == "__main__":
-
     print(f"Табличный режим: {'ВКЛ' if TABLE_MODE else 'ВЫКЛ'}")
     main()
 ```
