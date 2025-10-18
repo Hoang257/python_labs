@@ -16,7 +16,6 @@ if __name__ == "__main__":
         "ёжик, Ёлка" ,
         "Hello\r\nWorld",
         "  двойные   пробелы  "
-
     ]
     print('\nТест normalize:')
     for test in test_cases:
@@ -26,7 +25,6 @@ if __name__ == "__main__":
 def tokenize(text:str) -> list[str]:
     if not text:
         return []
-    
     word = r'\b\w+(?:-\w+)*\b' # через регулярку задаем каким должен быть слово
     tokens = re.findall(word, text)
     return tokens
@@ -41,8 +39,8 @@ if __name__ == '__main__':
     ]
     print("\nТест на tokenize")
     for test in test_cases:
-
         print(f"{tokenize(test)}")
+
 
 def count_freq(tokens: list[str]) -> dict[str, int]:
     dictionary = {}
@@ -56,7 +54,6 @@ if __name__ == '__main__':
         ]
     print("\nТест на count_freq")
     print(count_freq(test_cases))
-
 
 
 def top_n(freq: dict[str, int], n: int = None) -> list[str, int]:
