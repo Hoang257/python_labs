@@ -18,6 +18,7 @@ text_1 = read_text(r'C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data\input
 print(text_1)
 
 
+
 import csv
 from typing import Iterable, Sequence
 
@@ -26,6 +27,7 @@ def write_csv(rows: Iterable[Sequence], path: str | Path, header: tuple[str, ...
     Если передан header, записать его первой строкой.
     Проверить, что каждая строка в rows имеет одинаковую длину (иначе ValueError)."""
     p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
     rows = list(rows)
     if not rows:
         return 
@@ -33,13 +35,13 @@ def write_csv(rows: Iterable[Sequence], path: str | Path, header: tuple[str, ...
     length = len(rows[0])
     for i in rows:
         if len(i)!= length:
-            raise ValueError('Все строки должны быть одинаковой длины')
-            
-    with p.open('w', newline='', encoding='utf-8') as f: # если файл очень большой, то стоит читать построчно, иначе выдаст ошибочку, newline отключает авто обработку перевода строк
-        writer = csv.writer(f, delimiter=',', quoting=csv.QUOTE_MINIMAL) # quoting-ставим кавычки только где это надо
+            raise ValueError('Все строки должны быть одинаковой длины')    
+    with p.open('w', newline='', encoding='utf-8') as f: # коректирует перенос строк в csv
+        writer = csv.writer(f, delimiter=',', quoting=csv.QUOTE_MINIMAL) # упраление кавычками, ставит только когда надо
         if header:
             writer.writerow(header)
         writer.writerows(rows)
 
-text_2 = write_csv([("word","count"),("test",3)], r'python_labs/data/check.csv')
-print(text_2)
+
+text_2 = write_csv([("word","count")], r'C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data\input.txt')
+print(text_2) 
