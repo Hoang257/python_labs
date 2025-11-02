@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from src.text import normalize, tokenize, count_freq, top_n
+from text import normalize, tokenize, count_freq, top_n
 
 TABLE_MODE = False
 def print_table(top_items):
