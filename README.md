@@ -376,3 +376,121 @@ if __name__ == "__main__":
 ## Если выключен режим показаа таблицы:
 ![Результат задания 1.4](/images/image-22.png)
 
+
+# Лабораторная работа №4
+
+## Задание A
+```python
+from pathlib import Path
+
+def read_text(path: str | Path, encoding: str = "utf-8") -> str:
+    """
+    Открыть файл на чтение в указанной кодировке и вернуть содержимое как одну строку.
+    Обрабатывать ошибки: если файл не найден — поднимать FileNotFoundError (пусть падает), если кодировка не подходит — поднимать UnicodeDecodeError (пусть падает).
+    НО: в докстринге опишите, как пользователь может выбрать другую кодировку (пример: encoding="cp1251")."""
+    p = Path(path)
+    # FileNotFoundError и UnicodeDecodeError пусть «всплывают» — это нормально
+    try:
+        return p.read_text(encoding=encoding) # Считываем текст
+    except FileNotFoundError:
+        raise FileNotFoundError('Нет такого файла')
+    except UnicodeDecodeError:
+        raise UnicodeDecodeError('Неправильная кодировка')
+    
+text_1 = read_text(r'C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data\input.txt')
+print(text_1)
+
+
+import csv
+from typing import Iterable, Sequence
+
+def write_csv(rows: Iterable[Sequence], path: str | Path, header: tuple[str, ...] | None = None) -> None:
+    """Создать/перезаписать CSV с разделителем ,.
+    Если передан header, записать его первой строкой.
+    Проверить, что каждая строка в rows имеет одинаковую длину (иначе ValueError)."""
+    p = Path(path)
+    rows = list(rows)
+    if not rows:
+        return 
+    
+    length = len(rows[0])
+    for i in rows:
+        if len(i)!= length:
+            raise ValueError('Все строки должны быть одинаковой длины')
+            
+    with p.open('w', newline='', encoding='utf-8') as f: # коректирует перенос строк в csv
+        writer = csv.writer(f, delimiter=',', quoting=csv.QUOTE_MINIMAL) # упраление кавычками, ставит только когда надо
+        if header:
+            writer.writerow(header)
+        writer.writerows(rows)
+
+
+text_2 = write_csv([("word","count"),("test",3)], r'python_labs/data/checkcsv')
+print(text_2) 
+ ```
+ ## Задание B
+ ```python
+ import sys, os, csv
+from pathlib import Path 
+import argparse
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from func_from_3lab import normalize, tokenize, count_freq, top_n
+
+def main():
+    parser = argparse.ArgumentParser(description='Word freq report')#создаём объект парсера для обработки аргументов. 
+    parser.add_argument('--in', dest='input_file', default='data/input.txt')
+    parser.add_argument('--out', dest='output_file', default='data/output.txt')
+    parser.add_argument('--encoding', default='utf-8')
+    args = parser.parse_args()
+
+    try:
+        with open(args.input_file, 'r', encoding=args.encoding) as f:
+            text = f.read()
+    except FileNotFoundError:
+        raise FileNotFoundError('Нет такого файла')
+    except UnicodeDecodeError:
+        raise UnicodeDecodeError('Неправильная кодировка')
+    
+    normalized_text = normalize(text)
+    words = tokenize(normalized_text)
+    freq = count_freq(words)
+
+    total_words = len(words)
+    unique_words = len(freq)
+
+    sorted_words = sorted(freq.items(), key=lambda x: (-x[1], x[0]))
+
+    os.makedirs(os.path.dirname(args.output_file), exist_ok=True)
+    with open(args.output_file, 'w', encoding='utf-8') as f:
+        f.write("word,count\n")
+        for word, count in sorted_words:
+            f.write(f"{word},{count}\n")
+    
+    print(f'Всего слов: {total_words}')
+    print(f"Уникальных слов: {unique_words}")
+    print("Топ-5:")
+    for word, count in sorted_words[:5]:
+        print(f"{word}: {count}")
+
+if __name__ == '__main__':
+    main()
+ ```
+## Тест-кейсы:
+### запуск с обычным файлом
+
+![Результат задания 1](/images/image-23.png)
+
+![Результат задания 2](/images/image-24.png)
+
+![Результат задания 3](/images/image-25.png)
+
+### запуск с пустым файлом
+
+![Результат задания 1](/images/image-26.png)
+
+![Результат задания 2](/images/image-27.png)
+
+![Результат задания 3](/images/image-28.png)
+
+### запуск когда файл не существует
+![Результат задания 1](/images/image-29.png)
