@@ -494,3 +494,91 @@ if __name__ == '__main__':
 
 ### запуск когда файл не существует
 ![Результат задания 1](/images/image-29.png)
+
+# Лабораторная работа №5
+## Задание A 
+### (JSON -> CSV)
+
+```python
+import json 
+import csv
+import sys
+from pathlib import Path
+def json_to_csv(json_path: str, csv_path:str) -> None:
+    current_file = Path(__file__) 
+    project_root = current_file.parent.parent.parent 
+    
+    input_path = project_root / json_path
+    output_path = project_root / csv_path
+    if not input_path.exists():
+        raise FileNotFoundError(f"JSON file не найден: {json_path}")
+    
+    with open(input_path, encoding='utf-8') as json_file:
+        try:
+            data = json.load(json_file)
+        except json.JSONDecodeError:
+            raise ValueError("Неправильная кодировка")
+    if not data:
+        raise ValueError('JSON пуст')
+    if not all(isinstance(item, dict) for item in data):
+        raise ValueError("Все элементы JSON должны быть словарями")
+    
+    all_keys = set()
+    for item in data:
+        all_keys.update(item.keys())
+    
+    fieldnames = sorted(all_keys)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_path, 'w', newline='', encoding='utf-8') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for item in data:
+            row = {}
+            for field in fieldnames:
+                value = item.get(field)
+                row[field] = str(value) if value is not None else ""
+            writer.writerow(row)
+json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
+```
+## Тест-кейсы:
+### запуск с обычным файлом
+![Исходный JSON](/images/image-30.png)
+![Результат конвертации из JSON в CSV](/images/image-30.png)
+
+### запуск с несуществующим файлом
+![Результат запуска](/images/image-31.png)
+
+
+### (CSV -> JSON)
+```python
+import json 
+import csv
+import sys
+from pathlib import Path
+def csv_to_json(csv_path: str, json_path: str) -> None:
+    current_file = Path(__file__)
+    project_root = current_file.parent.parent.parent.parent
+
+    input_file = project_root / csv_path
+    output_file = project_root / json_path
+
+    if not input_file.exists():
+        raise FileNotFoundError('Файл не существует')
+    if not csv_path.lower().endswith('.csv'):
+        raise ValueError('Некоректный формат файла')
+    
+    data = []
+    try:
+        with open(input_file, 'r', encoding='utf-8') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                data.append(row)
+    except UnicodeDecodeError:
+        raise UnicodeDecodeError('Некорректная кодировка файла')
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, 'w', encoding='utf-8') as json_file:
+        json.dump(data, json_file, ensure_ascii=False, indent=2)
+
+csv_to_json(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people_from_csv.json')
+```
