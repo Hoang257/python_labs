@@ -547,8 +547,7 @@ json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
 ![Результат конвертации из JSON в CSV](/images/image-30.png)
 
 ### запуск с несуществующим файлом
-![Результат запуска](/images/image-31.png)
-
+![Результат запуска](/images/image-32.png)
 
 ### (CSV -> JSON)
 ```python
