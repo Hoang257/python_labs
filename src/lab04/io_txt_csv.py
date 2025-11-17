@@ -43,5 +43,5 @@ def write_csv(rows: Iterable[Sequence], path: str | Path, header: tuple[str, ...
         writer.writerows(rows)
 
 
-text_2 = write_csv([("word","count")], r'C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data\input.txt')
+text_2 = write_csv([("word","count")], r'C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data_lab_04\input.txt')
 print(text_2) 
