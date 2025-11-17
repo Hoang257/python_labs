@@ -512,14 +512,14 @@ def json_to_csv(json_path: str, csv_path:str) -> None:
     output_path = project_root / csv_path
     if not input_path.exists():
         raise FileNotFoundError(f"JSON file не найден: {json_path}")
+    if input_path.stat().st_size == 0:
+        raise ValueError("JSON файл пустой")
     
     with open(input_path, encoding='utf-8') as json_file:
         try:
             data = json.load(json_file)
         except json.JSONDecodeError:
             raise ValueError("Неправильная кодировка")
-    if not data:
-        raise ValueError('JSON пуст')
     if not all(isinstance(item, dict) for item in data):
         raise ValueError("Все элементы JSON должны быть словарями")
     
@@ -544,10 +544,14 @@ json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
 ## Тест-кейсы:
 ### запуск с обычным файлом
 ![Исходный JSON](/images/image-30.png)
-![Результат конвертации из JSON в CSV](/images/image-30.png)
+![Результат конвертации из JSON в CSV](/images/image-31.png)
 
 ### запуск с несуществующим файлом
 ![Результат запуска](/images/image-32.png)
+
+### запуск с пустым файлом
+![Результат запуска](/images/image-33.png)
+
 
 ### (CSV -> JSON)
 ```python
@@ -581,3 +585,53 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
 
 csv_to_json(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people_from_csv.json')
 ```
+## Тест-кейсы:
+### запуск с обычным файлом
+![Исходный JSON](/images/image-34.png)
+![Результат конвертации из CSV в JSON](/images/image-35.png)
+
+### запуск с несуществующим файлом
+![Результат запуска](/images/image-36.png)
+
+### запуск с пустым файлом
+![Результат запуска](/images/image-37.png)
+
+## Задание B (CSV → XLSX)
+```python
+import json 
+import csv
+from pathlib import Path
+from openpyxl import Workbook
+
+def csv_xlsx(csv_path: str, xlsx_path: str) -> None:
+    current_file = Path(__file__)
+    project_root = current_file.parent.parent.parent.parent
+
+    input_file =  project_root / csv_path
+    output_file = project_root / xlsx_path
+
+    if not input_file.exists():
+        raise FileNotFoundError('Файл не сузествует')
+    if not csv_path.lower().endswith('.csv'):
+        raise ValueError('Некоректный формат файла')
+    
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sheet1"
+    try:
+        with open(input_file, 'r', encoding="utf-8") as csv_file:
+            csv_reader = csv.reader(csv_file)   
+            for row in csv_reader:
+                ws.append(row)
+    except UnicodeEncodeError:
+        raise UnicodeEncodeError('Некорректная кодировка файла')
+    wb.save(r'python_labs\data_lab_05\people.xlsx')
+
+csv_xlsx(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people.xlsx')
+```
+
+## запуск с обычным файлом
+
+![Исходный файл CSV](/images/image-38.png)
+![Результат конвертации из CSV в XLSX](/images/image-39.png)
+
