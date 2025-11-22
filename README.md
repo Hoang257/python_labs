@@ -783,7 +783,7 @@ if __name__ == "__main__":
 ![подсказки](/images/image-41.png)
 ### обычная работа
 ![результат](/images/image-42.png)
-![результат](/images/image-42.png)
 ![результат](/images/image-43.png)
+![результат](/images/image-44.png)
 
 
