@@ -777,3 +777,13 @@ if __name__ == "__main__":
 ### python src/lab06/cli_text.py stats --input src\lab06\data\test.txt
 #### выводит текст с нумерацием
 ### python src/lab06/cli_text.py cat --input src\lab06\data\test.txt -n
+## Результат работы:
+### подсказки
+![подсказки](/images/image-40.png)
+![подсказки](/images/image-41.png)
+### обычная работа
+![результат](/images/image-42.png)
+![результат](/images/image-42.png)
+![результат](/images/image-43.png)
+
+
