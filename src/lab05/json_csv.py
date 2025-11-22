@@ -3,11 +3,9 @@ import csv
 import sys
 from pathlib import Path
 def json_to_csv(json_path: str, csv_path:str) -> None:
-    current_file = Path(__file__) 
-    project_root = current_file.parent.parent.parent 
-    
-    input_path = project_root / json_path
-    output_path = project_root / csv_path
+    # Преобразуем пути в Path объекты и нормализуем их
+    input_path = Path(json_path).expanduser().resolve()
+    output_path = Path(csv_path).expanduser().resolve()
     if not input_path.exists():
         raise FileNotFoundError(f"JSON file не найден: {json_path}")
     if input_path.stat().st_size == 0:
@@ -37,5 +35,5 @@ def json_to_csv(json_path: str, csv_path:str) -> None:
                 value = item.get(field)
                 row[field] = str(value) if value is not None else ""
             writer.writerow(row)
-json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
-
+if __name__ == "__main__":
+    json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")

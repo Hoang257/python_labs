@@ -505,11 +505,9 @@ import csv
 import sys
 from pathlib import Path
 def json_to_csv(json_path: str, csv_path:str) -> None:
-    current_file = Path(__file__) 
-    project_root = current_file.parent.parent.parent 
-    
-    input_path = project_root / json_path
-    output_path = project_root / csv_path
+    # Преобразуем пути в Path объекты и нормализуем их
+    input_path = Path(json_path).expanduser().resolve()
+    output_path = Path(csv_path).expanduser().resolve()
     if not input_path.exists():
         raise FileNotFoundError(f"JSON file не найден: {json_path}")
     if input_path.stat().st_size == 0:
@@ -539,7 +537,8 @@ def json_to_csv(json_path: str, csv_path:str) -> None:
                 value = item.get(field)
                 row[field] = str(value) if value is not None else ""
             writer.writerow(row)
-json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
+if __name__ == "__main__":
+    json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
 ```
 ## Тест-кейсы:
 ### запуск с обычным файлом
@@ -560,11 +559,9 @@ import csv
 import sys
 from pathlib import Path
 def csv_to_json(csv_path: str, json_path: str) -> None:
-    current_file = Path(__file__)
-    project_root = current_file.parent.parent.parent.parent
-
-    input_file = project_root / csv_path
-    output_file = project_root / json_path
+    # Преобразуем пути в Path объекты и нормализуем их
+    input_file = Path(csv_path).expanduser().resolve()
+    output_file = Path(json_path).expanduser().resolve()
 
     if not input_file.exists():
         raise FileNotFoundError('Файл не существует')
@@ -582,8 +579,8 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with open(output_file, 'w', encoding='utf-8') as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=2)
-
-csv_to_json(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people_from_csv.json')
+if __name__ == "__main__":
+    csv_to_json(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people_from_csv.json')
 ```
 ## Тест-кейсы:
 ### запуск с обычным файлом
@@ -598,36 +595,35 @@ csv_to_json(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\peo
 
 ## Задание B (CSV → XLSX)
 ```python
-import json 
 import csv
 from pathlib import Path
 from openpyxl import Workbook
 
 def csv_xlsx(csv_path: str, xlsx_path: str) -> None:
     current_file = Path(__file__)
-    project_root = current_file.parent.parent.parent.parent
+    project_root = current_file.parent.parent.parent
 
-    input_file =  project_root / csv_path
+    input_file = project_root / csv_path
     output_file = project_root / xlsx_path
 
     if not input_file.exists():
-        raise FileNotFoundError('Файл не сузествует')
+        raise FileNotFoundError('Файл не существует')
     if not csv_path.lower().endswith('.csv'):
-        raise ValueError('Некоректный формат файла')
-    
+        raise ValueError('Некорректный формат файла')
+
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+
     wb = Workbook()
     ws = wb.active
     ws.title = "Sheet1"
     try:
         with open(input_file, 'r', encoding="utf-8") as csv_file:
-            csv_reader = csv.reader(csv_file)   
+            csv_reader = csv.reader(csv_file)
             for row in csv_reader:
                 ws.append(row)
     except UnicodeEncodeError:
         raise UnicodeEncodeError('Некорректная кодировка файла')
-    wb.save(r'python_labs\data_lab_05\people.xlsx')
-
-csv_xlsx(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people.xlsx')
+    wb.save(output_file)
 ```
 
 ## запуск с обычным файлом
@@ -635,3 +631,149 @@ csv_xlsx(r'python_labs\data_lab_05\people.csv', r'python_labs\data_lab_05\people
 ![Исходный файл CSV](/images/image-38.png)
 ![Результат конвертации из CSV в XLSX](/images/image-39.png)
 
+
+# Лабораторная работа №6
+## Задание A - cli_convert
+```python
+import argparse
+import sys, os
+from pathlib import Path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from lab05.csv_json import csv_to_json
+from lab05.csv_xls import csv_xlsx
+from lab05.json_csv import json_to_csv
+
+def main():
+    parser = argparse.ArgumentParser(description='Конверты данных')
+    subparsers = parser.add_subparsers(dest='command')
+
+    json_csv_parser = subparsers.add_parser('json2csv', help='конвертирует из json в csv')
+    json_csv_parser.add_argument('--input', required=True, help='Входной файл')
+    json_csv_parser.add_argument('--output', required=True, help='Выходной файл')
+
+    csv_json_parser = subparsers.add_parser('csv2json', help='конвертирует из csv в json')
+    csv_json_parser.add_argument('--input', required=True, help='Входной файл')
+    csv_json_parser.add_argument('--output', required=True, help='Выходной файл')
+
+    csv_xlsx_parser = subparsers.add_parser('csv2xlsx', help='конвертирует из csv в xlsx')
+    csv_xlsx_parser.add_argument('--input', required=True, help='Входной файл')
+    csv_xlsx_parser.add_argument('--output', required=True, help='Выходной файл')
+
+    args = parser.parse_args()
+    if args.command is None:
+        parser.print_help()
+        sys.exit(1)
+
+    input_file = Path(args.input).expanduser()
+    if not input_file.is_absolute():
+        input_file = (Path.cwd() / input_file).resolve()
+    else:
+        input_file = input_file.resolve()
+
+    output_file = Path(args.output).expanduser()
+    if not output_file.is_absolute():
+        output_file = (Path.cwd() / output_file).resolve()
+    else:
+        output_file = output_file.resolve()
+
+    if not input_file.exists():
+        print(f"Ошибка: входной файл не найден: {input_file}")
+        sys.exit(1)
+
+    if args.command == 'json2csv':
+        json_to_csv(str(input_file), str(output_file))
+    elif args.command == 'csv2json':
+        csv_to_json(str(input_file), str(output_file))
+    elif args.command == 'csv2xlsx':
+        csv_xlsx(str(input_file), str(output_file))
+            
+if __name__ == "__main__":
+    main()
+```
+## сводка -h команд
+### python src/lab06/cli_convert.py json2csv -h
+### python src/lab06/cli_convert.py csv2json -h
+### python src/lab06/cli_convert.py csv2xlsx -h
+
+## сводка команд для проверки
+### python src/lab06/cli_convert.py json2csv --input src\lab06\data\people.json --output src\lab06\data\people.csv
+### python src/lab06/cli_convert.py csv2json --input src\lab06\data\people.csv --output src\lab06\data\people.json
+### python src/lab06/cli_convert.py csv2xlsx --input src\lab06\data\people.csv --output src\lab06\data\people.xlsx
+
+## Задание B - cli_text
+
+```python
+import argparse
+import sys, os
+from pathlib import Path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from lab03.text import tokenize, count_freq, top_n
+
+def num_str(input_path, number_lines=False): 
+    try:
+        with open(input_path, 'r', encoding='utf-8') as f:
+            line_num = 1
+            for line in f:
+                if number_lines:
+                    print(f"{line_num}: {line}", end='')
+                    line_num+=1
+                else:
+                    print(line, end='')
+    except FileNotFoundError:
+        print('Файл не найден')
+        sys.exit(1)
+
+def stat_text(input_path: Path, top=5):
+    try:
+        with open(input_path, 'r', encoding='utf-8') as f:
+            text = f.read()
+    except FileNotFoundError:
+        print("Файл не найден:", input_path)
+        sys.exit(1)
+
+    tokens = tokenize(text)
+    freq = count_freq(tokens)
+    top_words = top_n(freq, top)
+
+    print(f"Всего слов: {len(tokens)}")
+    print(f"Уникальных слов: {len(set(tokens))}")
+    print("Топ слов:")
+
+    for word, count in top_words:
+        print(f"{word}: {count}")
+
+def main():
+    parser = argparse.ArgumentParser(description="CLI‑утилиты лабораторной №6")
+    subparsers = parser.add_subparsers(dest="command")
+
+    # подкоманда cat
+    cat_parser = subparsers.add_parser("cat", help="Выводит содержимое файла")
+    cat_parser.add_argument('--input', required=True, help='Путь к текущему файлу')
+    cat_parser.add_argument('-n', action="store_true", help='Нумерует строки')
+
+    # подкоманда stats
+    stats_parser = subparsers.add_parser("stats", help="Частоты слов")
+    stats_parser.add_argument('--input', required=True, help='Путь к текущему файлу')
+    stats_parser.add_argument('--top', type=int, default=5, help='сколько в топе должно быть слов, по умолчанию 5')
+
+    args = parser.parse_args()
+
+    if args.command == 'cat':
+        input_path = Path(args.input)
+        num_str(input_path, number_lines=args.n)
+    elif args.command == 'stats':
+        input_path = Path(args.input, top=args.top)
+        stat_text(input_path)
+
+if __name__ == "__main__":
+    main()
+```
+## сводка -h команд
+### python src/lab06/cli_text.py cat --input src\lab06\data\test.txt -h
+### python src/lab06/cli_text.py stats --input src\lab06\data\test.txt -h
+## сводка команд
+#### просто выводит текст 
+### python src/lab06/cli_text.py stats --input src\lab06\data\test.txt
+#### выводит текст с нумерацием
+### python src/lab06/cli_text.py cat --input src\lab06\data\test.txt -n
