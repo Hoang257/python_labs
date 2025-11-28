@@ -17,8 +17,8 @@ def read_text(path: str | Path, encoding: str = "utf-8") -> str:
         raise UnicodeDecodeError("Неправильная кодировка")
 
 
-text_1 = read_text(r"C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data\input.txt")
-print(text_1)
+# text_1 = read_text(r"C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data\input.txt")
+# print(text_1)
 
 
 import csv
@@ -52,8 +52,8 @@ def write_csv(
         writer.writerows(rows)
 
 
-text_2 = write_csv(
-    [("word", "count")],
-    r"C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data_lab_04\input.txt",
-)
-print(text_2)
+# text_2 = write_csv(
+#     [("word", "count")],
+#     r"C:\Users\hoang\OneDrive\Desktop\laba\python_labs\data_lab_04\input.txt",
+# )
+# print(text_2)
