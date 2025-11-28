@@ -27,8 +27,8 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
         json.dump(data, json_file, ensure_ascii=False, indent=2)
 
 
-if __name__ == "__main__":
-    csv_to_json(
-        r"python_labs\data_lab_05\people.csv",
-        r"python_labs\data_lab_05\people_from_csv.json",
-    )
+# if __name__ == "__main__":
+#     csv_to_json(
+#         r"python_labs\data_lab_05\people.csv",
+#         r"python_labs\data_lab_05\people_from_csv.json",
+#     )
