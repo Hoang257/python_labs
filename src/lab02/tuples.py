@@ -25,14 +25,14 @@ def format_record(rec: tuple([str, str, float])) -> str:
 # result = format_record(student_data)
 # print(result)
 
-if __name__ == "__main__":
-    # Тест-кейсы из задания
-    test_cases = [
-        ("Иванов Иван Иванович", "BIVT-25", 4.6),
-        ("Петров Пётр", "IKBO-12", 5.0),
-        ("Петров Пётр Петрович", "IKBO-12"),
-        ("  сидорова  анна   сергеевна ", "ABB-01", 3.999),
-    ]
+# if __name__ == "__main__":
+#     # Тест-кейсы из задания
+#     test_cases = [
+#         ("Иванов Иван Иванович", "BIVT-25", 4.6),
+#         ("Петров Пётр", "IKBO-12", 5.0),
+#         ("Петров Пётр Петрович", "IKBO-12"),
+#         ("  сидорова  анна   сергеевна ", "ABB-01", 3.999),
+#     ]
 
-    for test in test_cases:
-        print(format_record(test))
+#     for test in test_cases:
+#         print(format_record(test))

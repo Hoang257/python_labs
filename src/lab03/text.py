@@ -15,16 +15,16 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     return text
 
 
-if __name__ == "__main__":
-    test_cases = [
-        "ПрИвЕт\nМИр\t",
-        "ёжик, Ёлка",
-        "Hello\r\nWorld",
-        "  двойные   пробелы  ",
-    ]
-    print("\nТест normalize:")
-    for test in test_cases:
-        print(f"{normalize(test, casefold= True, yo2e = True)}")
+# if __name__ == "__main__":
+#     test_cases = [
+#         "ПрИвЕт\nМИр\t",
+#         "ёжик, Ёлка",
+#         "Hello\r\nWorld",
+#         "  двойные   пробелы  ",
+#     ]
+#     print("\nТест normalize:")
+#     for test in test_cases:
+#         print(f"{normalize(test, casefold= True, yo2e = True)}")
 
 
 def tokenize(text: str) -> list[str]:
@@ -35,17 +35,17 @@ def tokenize(text: str) -> list[str]:
     return tokens
 
 
-if __name__ == "__main__":
-    test_cases = [
-        "привет мир",
-        "hello,world!!!",
-        "по-настоящему круто",
-        "2025 год",
-        "emoji 😀 не слово",
-    ]
-    print("\nТест на tokenize")
-    for test in test_cases:
-        print(f"{tokenize(test)}")
+# if __name__ == "__main__":
+#     test_cases = [
+#         "привет мир",
+#         "hello,world!!!",
+#         "по-настоящему круто",
+#         "2025 год",
+#         "emoji 😀 не слово",
+#     ]
+#     print("\nТест на tokenize")
+#     for test in test_cases:
+#         print(f"{tokenize(test)}")
 
 
 def count_freq(tokens: list[str]) -> dict[str, int]:
@@ -55,10 +55,10 @@ def count_freq(tokens: list[str]) -> dict[str, int]:
     return dictionary
 
 
-if __name__ == "__main__":
-    test_cases = ["a", "b", "a", "c", "b", "a"]
-    print("\nТест на count_freq")
-    print(count_freq(test_cases))
+# if __name__ == "__main__":
+#     test_cases = ["a", "b", "a", "c", "b", "a"]
+#     print("\nТест на count_freq")
+#     print(count_freq(test_cases))
 
 
 def top_n(freq: dict[str, int], n: int = None) -> list[str, int]:
@@ -66,12 +66,12 @@ def top_n(freq: dict[str, int], n: int = None) -> list[str, int]:
     return items[:n]
 
 
-if __name__ == "__main__":
-    test_cases = ["aa bb b b d b b d a a"]
-    print("\nТест на top_words:")
-    for test in test_cases:
-        normalized = normalize(test)
-        tokens = tokenize(normalized)
-        freq = count_freq(tokens)
-        top_words = top_n(freq, 3)
-    print(top_words)
+# if __name__ == "__main__":
+#     test_cases = ["aa bb b b d b b d a a"]
+#     print("\nТест на top_words:")
+#     for test in test_cases:
+#         normalized = normalize(test)
+#         tokens = tokenize(normalized)
+#         freq = count_freq(tokens)
+#         top_words = top_n(freq, 3)
+#     print(top_words)

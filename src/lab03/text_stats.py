@@ -42,7 +42,7 @@ def main():
             print(f"{word}:{count}")
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    print(f"Табличный режим: {'ВКЛ' if TABLE_MODE else 'ВЫКЛ'}")
-    main()
+#     print(f"Табличный режим: {'ВКЛ' if TABLE_MODE else 'ВЫКЛ'}")
+#     main()
