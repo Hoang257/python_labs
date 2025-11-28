@@ -38,5 +38,5 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
             writer.writerow(row)
 
 
-if __name__ == "__main__":
-    json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
+# if __name__ == "__main__":
+#     json_to_csv("data_lab_05\people.json", "data_lab_05\people_from_json.csv")
