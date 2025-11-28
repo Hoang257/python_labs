@@ -1,27 +1,35 @@
 import argparse
 import sys, os
 from pathlib import Path
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from lab05.csv_json import csv_to_json
 from lab05.csv_xls import csv_xlsx
 from lab05.json_csv import json_to_csv
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Конверты данных')
-    subparsers = parser.add_subparsers(dest='command')
+    parser = argparse.ArgumentParser(description="Конверты данных")
+    subparsers = parser.add_subparsers(dest="command")
 
-    json_csv_parser = subparsers.add_parser('json2csv', help='конвертирует из json в csv')
-    json_csv_parser.add_argument('--input', required=True, help='Входной файл')
-    json_csv_parser.add_argument('--output', required=True, help='Выходной файл')
+    json_csv_parser = subparsers.add_parser(
+        "json2csv", help="конвертирует из json в csv"
+    )
+    json_csv_parser.add_argument("--input", required=True, help="Входной файл")
+    json_csv_parser.add_argument("--output", required=True, help="Выходной файл")
 
-    csv_json_parser = subparsers.add_parser('csv2json', help='конвертирует из csv в json')
-    csv_json_parser.add_argument('--input', required=True, help='Входной файл')
-    csv_json_parser.add_argument('--output', required=True, help='Выходной файл')
+    csv_json_parser = subparsers.add_parser(
+        "csv2json", help="конвертирует из csv в json"
+    )
+    csv_json_parser.add_argument("--input", required=True, help="Входной файл")
+    csv_json_parser.add_argument("--output", required=True, help="Выходной файл")
 
-    csv_xlsx_parser = subparsers.add_parser('csv2xlsx', help='конвертирует из csv в xlsx')
-    csv_xlsx_parser.add_argument('--input', required=True, help='Входной файл')
-    csv_xlsx_parser.add_argument('--output', required=True, help='Выходной файл')
+    csv_xlsx_parser = subparsers.add_parser(
+        "csv2xlsx", help="конвертирует из csv в xlsx"
+    )
+    csv_xlsx_parser.add_argument("--input", required=True, help="Входной файл")
+    csv_xlsx_parser.add_argument("--output", required=True, help="Выходной файл")
 
     args = parser.parse_args()
     if args.command is None:
@@ -44,12 +52,13 @@ def main():
         print(f"Ошибка: входной файл не найден: {input_file}")
         sys.exit(1)
 
-    if args.command == 'json2csv':
+    if args.command == "json2csv":
         json_to_csv(str(input_file), str(output_file))
-    elif args.command == 'csv2json':
+    elif args.command == "csv2json":
         csv_to_json(str(input_file), str(output_file))
-    elif args.command == 'csv2xlsx':
+    elif args.command == "csv2xlsx":
         csv_xlsx(str(input_file), str(output_file))
+
 
 if __name__ == "__main__":
     main()
