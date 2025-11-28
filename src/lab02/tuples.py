@@ -22,8 +22,8 @@ def format_record(rec: tuple([str, str, float])) -> str:
     return f"{name_end}, гр. {group_set}, GPA {gpa_set}"
 
 
-# result = format_record(student_data)
-# print(result)
+result = format_record(student_data)
+print(result)
 
 # if __name__ == "__main__":
 #     # Тест-кейсы из задания
