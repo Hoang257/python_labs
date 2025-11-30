@@ -36,28 +36,44 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    input_file = Path(args.input).expanduser()
-    if not input_file.is_absolute():
-        input_file = (Path.cwd() / input_file).resolve()
-    else:
-        input_file = input_file.resolve()
+    current_file = Path(__file__).resolve()
+    python_labs_root = current_file.parent.parent.parent
 
-    output_file = Path(args.output).expanduser()
-    if not output_file.is_absolute():
-        output_file = (Path.cwd() / output_file).resolve()
-    else:
-        output_file = output_file.resolve()
+    def normalize_path(path_str: str) -> Path:
+        # Создаём объект Path из строки и разворачиваем ~ в домашнюю директорию пользователя
+        path_obj = Path(path_str).expanduser()
+        # Проверяем, является ли путь абсолютным (начинается с C:\ или /)
+        if not path_obj.is_absolute():
+            # Если путь относительный, добавляем его к корню python_labs и получаем абсолютный путь
+            path_obj = (python_labs_root / path_obj).resolve()
+        else:
+            # Если путь уже абсолютный, просто нормализуем его (убираем .. и .)
+            path_obj = path_obj.resolve()
+        try:
+            # Преобразуем абсолютный путь в относительный относительно python_labs_root
+            return path_obj.relative_to(python_labs_root)
+        except ValueError as exc:
+            # Если путь находится вне каталога python_labs, выбрасываем ошибку
+            raise ValueError(
+                f"Путь {path_obj} должен находиться внутри каталога {python_labs_root}"
+            ) from exc
 
-    if not input_file.exists():
-        print(f"Ошибка: входной файл не найден: {input_file}")
-        sys.exit(1)
+    # Нормализуем входной путь (преобразуем в относительный от python_labs_root)
+    input_path = normalize_path(args.input)
+    # Нормализуем выходной путь (преобразуем в относительный от python_labs_root)
+    output_path = normalize_path(args.output)
+
+    # Собираем полный абсолютный путь к выходному файлу
+    output_full = python_labs_root / output_relative
+    # Создаём все необходимые директории для выходного файла, если их нет
+    output_full.parent.mkdir(parents=True, exist_ok=True)
 
     if args.command == "json2csv":
-        json_to_csv(str(input_file), str(output_file))
+        json_to_csv(str(input_relative), str(output_relative))
     elif args.command == "csv2json":
-        csv_to_json(str(input_file), str(output_file))
+        csv_to_json(str(input_relative), str(output_relative))
     elif args.command == "csv2xlsx":
-        csv_xlsx(str(input_file), str(output_file))
+        csv_xlsx(str(input_relative), str(output_relative))
 
 
 if __name__ == "__main__":
@@ -66,6 +82,6 @@ if __name__ == "__main__":
 # python src/lab06/cli_convert.py csv2json -h
 # python src/lab06/cli_convert.py csv2xlsx -h
 
+
 # python src/lab06/cli_convert.py json2csv --input src\lab06\data\people.json --output src\lab06\data\people.csv
 # python src/lab06/cli_convert.py csv2json --input src\lab06\data\people.csv --output src\lab06\data\people.json
-# python src/lab06/cli_convert.py csv2xlsx --input src\lab06\data\people.csv --output src\lab06\data\people.xls

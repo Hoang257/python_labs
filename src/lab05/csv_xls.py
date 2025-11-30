@@ -4,9 +4,11 @@ from openpyxl import Workbook
 
 
 def csv_xlsx(csv_path: str, xlsx_path: str) -> None:
-    # Преобразуем пути в Path объекты и нормализуем их
-    input_file = Path(csv_path).expanduser().resolve()
-    output_file = Path(xlsx_path).expanduser().resolve()
+    current_file = Path(__file__)
+    project_root = current_file.parent.parent.parent
+
+    input_file = project_root / csv_path
+    output_file = project_root / xlsx_path
 
     if not input_file.exists():
         raise FileNotFoundError("Файл не существует")
@@ -23,6 +25,6 @@ def csv_xlsx(csv_path: str, xlsx_path: str) -> None:
             csv_reader = csv.reader(csv_file)
             for row in csv_reader:
                 ws.append(row)
-    except UnicodeEncodeError:
-        raise UnicodeEncodeError("Некорректная кодировка файла")
+    except UnicodeEncodeError as exc:
+        raise UnicodeEncodeError("Некорректная кодировка файла") from exc
     wb.save(output_file)
