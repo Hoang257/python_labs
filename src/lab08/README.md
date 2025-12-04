@@ -1,4 +1,4 @@
-# Лабораторная работа №7
+# Лабораторная работа №8
 ## Задание models 
 ```python
 from dataclasses import dataclass
@@ -106,9 +106,10 @@ if __name__ == "__main__":
         print(student)
 ```
 ### Результат работы функции 
-![результат](/images/image-46.png)
-![результат](/images/image-47.png)
 ![результат](/images/image-48.png)
+![результат](/images/image-47.png)
+![результат](/images/image-46.png)
+
 
 
 
