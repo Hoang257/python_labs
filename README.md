@@ -1315,3 +1315,361 @@ if __name__ == "__main__":
 ![результат](/images/image-49.png)
 ![результат](/images/image-50.png)
 
+# Лабораторная работа №9
+## Теория
+```python
+Стек (LIFO)
+push/pop/peek: O(1)
+Применение: отмена действий (undo), DFS, проверка скобок.
+Очередь (FIFO)
+
+enqueue/dequeue/peek: O(1)
+Применение: обработка задач, BFS, буферы.
+В Python: используй collections.deque.
+Односвязный список
+Узел: value, next.
+Плюсы: вставка/удаление в начале O(1).
+Минусы: доступ по индексу O(n); нет прямого доступа к предыдущему элементу.
+Операции:
+prepend: O(1)
+append (с tail): O(1)
+поиск: O(n)
+
+Двусвязный список
+Узел: value, next, prev.
+Плюсы: удаление по ссылке O(1); обход в обе стороны.
+Минусы: больше памяти на узел; сложнее в реализации.
+Операции (с head/tail):
+вставка/удаление в начале/конце: O(1)
+удаление по ссылке: O(1)
+доступ по индексу/поиск: O(n)
+```
+
+
+## Задание А (structures)
+```python
+from collections import deque
+from typing import Any, Optional
+
+
+class Stack:
+    def __init__(self):
+        self._data = []
+
+    def push(self, item: Any) -> None:
+        self._data.append(item)
+
+    def pop(self) -> Any:
+        if self.is_empty():
+            raise IndexError("Стек пустой")
+        return self._data.pop()
+
+    def peek(self) -> Optional[Any]:
+        if self.is_empty():
+            return None
+        return self._data[-1]
+
+    def is_empty(self) -> bool:
+        return len(self._data) == 0
+
+    def size(self) -> int:
+        return len(self._data)
+
+    def __repr__(self) -> str:
+        return f"Stack({self._data})"
+
+    def __str__(self) -> str:
+        return f"Stack(вершина ->{self._data[-1] if self._data else 'пусто'})"
+
+    def __len__(self) -> int:
+        return len(self._data)
+
+
+class Queue:
+    def __init__(self):
+        self._data = deque()
+
+    def enqueue(self, item: Any) -> None:
+        self._data.append(item)
+
+    def dequeue(self) -> Any:
+        if self.is_empty():
+            raise IndexError("Пустая очередь")
+        return self._data.popleft()
+
+    def peek(self) -> Optional[Any]:
+        if self.is_empty():
+            return None
+        return self._data[0]
+
+    def is_empty(self) -> bool:
+        return len(self._data) == 0
+
+    def size(self) -> int:
+        return len(self._data)
+
+    def __repr__(self) -> str:
+        return f"Queue({list(self._data)})"
+
+    def __str__(self) -> str:
+        return f"Queue(начало -> {self._data[0] if self._data else 'пусто'})"
+
+    def __len__(self) -> int:
+        return len(self._data)
+
+
+if __name__ == "__main__":
+
+    print("Тестирование Stack")
+    stack = Stack()
+
+    stack.push(10)
+    stack.push(20)
+    stack.push(30)
+
+    print(f"Длина стека: {len(stack)}")
+    print(f"Верхний элемент: {stack.peek()}")
+
+    popped = stack.pop()
+    print(f"Извлеченный элемент: {popped}")
+    print(f"Длина после pop: {len(stack)}")
+    print(f"Пустой ли стек: {stack.is_empty()}")
+
+    stack.pop()
+    stack.pop()
+    print(f"Пустой ли стек после очистки: {stack.is_empty()}")
+
+    try:
+        stack.pop()
+    except IndexError as e:
+        print(f"Ошибка при pop из пустого стека: {e}")
+
+    print()
+
+    print("Тестирование Queue")
+    queue = Queue()
+
+    queue.enqueue("первый")
+    queue.enqueue("второй")
+    queue.enqueue("третий")
+
+    print(f"Длина очереди: {len(queue)}")
+    print(f"Первый элемент: {queue.peek()}")
+
+    dequeued = queue.dequeue()
+    print(f"Извлеченный элемент: {dequeued}")
+    print(f"Длина после dequeue: {len(queue)}")
+    print(f"Пустая ли очередь: {queue.is_empty()}")
+
+    queue.dequeue()
+    queue.dequeue()
+    print(f"Пустая ли очередь после очистки: {queue.is_empty()}")
+
+    try:
+        queue.dequeue()
+    except IndexError as e:
+        print(f"Ошибка при dequeue из пустой очереди: {e}")
+```
+## Задание B (linked_list)
+```python
+class Node:
+    def __init__(self, value, next=None):
+        self.value = value
+        self.next = next
+
+    def __repr__(self):
+        return f"Node({self.value})"
+
+
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None
+        self._size = 0
+        self._tail = None
+
+    def append(self, value):
+        new_node = Node(value)
+        if self.head is None:
+            self.head = new_node
+            self._tail = new_node
+        else:
+            self._tail.next = new_node
+            self._tail = new_node
+
+        self._size += 1
+
+    def prepend(self, value):
+        new_node = Node(value, self.head)
+        self.head = new_node
+
+        if self._tail is None:
+            self._tail = new_node
+
+        self._size += 1
+
+    def insert(self, idx, value):
+        if idx < 0:
+            raise IndexError("Индекс меньше нуля")
+        if idx > self._size:
+            raise IndexError("Индекс больше длины коллекции")
+
+        if idx == 0:
+            self.prepend(value)
+            return
+
+        if idx == self._size:
+            self.append(value)
+            return
+
+        curr = self.head
+        for _ in range(idx - 1):
+            curr = curr.next
+
+        new_node = Node(value, next=curr.next)
+        curr.next = new_node
+        self._size += 1
+
+    def get(self, idx):
+        if idx < 0 or idx >= self._size:
+            raise IndexError("Индекс вне диапазона")
+
+        curr = self.head
+        for _ in range(idx):
+            curr = curr.next
+
+        return curr.value
+
+    def remove_at(self, idx):
+        if idx < 0 or idx >= self._size:
+            raise IndexError("Индекс вне диапазона")
+
+        if idx == 0:
+            value = self.head.value
+            self.head = self.head.next
+            self._size -= 1
+
+            if self.head is None:
+                self._tail = None
+
+            return value
+
+        curr = self.head
+        for _ in range(idx - 1):
+            curr = curr.next
+
+        value = curr.next.value
+        curr.next = curr.next.next
+
+        if curr.next is None:
+            self._tail = curr
+
+        self._size -= 1
+        return value
+
+    def remove(self, value):
+
+        if self.head is None:
+            return False
+
+        if self.head.value == value:
+            self.head = self.head.next
+            self._size -= 1
+
+            if self.head is None:
+                self._tail = None
+
+            return True
+
+        curr = self.head
+        while curr.next is not None and curr.next.value != value:
+            curr = curr.next
+
+        if curr.next is None:
+            return False
+
+        curr.next = curr.next.next
+        self._size -= 1
+
+        if curr.next is None:
+            self._tail = curr
+
+        return True
+
+    def find(self, value):
+
+        curr = self.head
+        idx = 0
+
+        while curr is not None:
+            if curr.value == value:
+                return idx
+            curr = curr.next
+            idx += 1
+
+        return -1
+
+    def clear(self):
+
+        self.head = None
+        self._tail = None
+        self._size = 0
+
+    def is_empty(self):
+
+        return self._size == 0
+
+    def __iter__(self):
+
+        curr = self.head
+        while curr:
+            yield curr.value
+            curr = curr.next
+
+    def __len__(self):
+
+        return self._size
+
+    def __str__(self):
+
+        if self.head is None:
+            return "None"
+
+        return " -> ".join(f"[{value}]" for value in self) + " -> None"
+
+    def __repr__(self):
+
+        vals = list(self)
+        return f"SinglyLinkedList({vals})"
+
+    def __getitem__(self, idx):
+        return self.get(idx)
+
+
+if __name__ == "__main__":
+    lst = SinglyLinkedList()
+    print(f"Пустой список: {lst}")
+    print(f"Длина: {len(lst)}")
+
+    lst.append(10)
+    lst.append(20)
+    lst.append(30)
+    print(f"После append 10,20,30: {lst}")
+    print(f"Длина: {len(lst)}")
+
+    lst.prepend(5)
+    print(f"После prepend 5: {lst}")
+    print(f"Длина: {len(lst)}")
+
+    lst.insert(2, 15)
+    print(f"После insert 15 на позицию 2: {lst}")
+    print(f"Длина: {len(lst)}")
+
+    print("Итерация по списку:")
+    for item in lst:
+        print(f"  {item}")
+
+    print(f"repr: {repr(lst)}")
+```
+### Результат работы 
+![результат](/images/image-51.png)
+![результат](/images/image-52.png)
